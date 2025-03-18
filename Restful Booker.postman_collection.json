@@ -1,0 +1,2185 @@
+{
+	"info": {
+		"_postman_id": "c6254fbc-51fa-4458-9532-4b8feaad6c27",
+		"name": "Restful Booker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41751858"
+	},
+	"item": [
+		{
+			"name": "Positive Scenarios(Regression)",
+			"item": [
+				{
+					"name": "Ping Request #1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(\"Hello World\");\r",
+									"var o_name=\"Alex\";\r",
+									"var g_name=pm.globals.get(\"global_name\");\r",
+									"\r",
+									"pm.test(\"TC#1 Verify the Status code is 201\", function () {\r",
+									"    console.log(pm.info.requestName);\r",
+									"    console.log(o_name);\r",
+									"    console.log(g_name);\r",
+									"});\r",
+									"pm.test(\"TC#2 Verify the Status code is 201\", function () {\r",
+									"   var f_name=\"Greg\"\r",
+									"   console.log(o_name);\r",
+									"   console.log(f_name);\r",
+									"   console.log(g_name);\r",
+									"   console.log(pm.collectionVariables.get(\"c_name\"));\r",
+									"});\r",
+									"\r",
+									"pm.globals.unset(\"variable_key\");\r",
+									"pm.globals.set(\"g_age\", \"30\");\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/ping",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Token Request #2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"TC#1 Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"TC#2 Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"TC#3 Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+									"});\r",
+									"pm.test(\"Token should exist\",function(){\r",
+									"var response = pm.response.json();\r",
+									"var token = response.token;\r",
+									"pm.expect(token).to.exist;\r",
+									"});\r",
+									"pm.test(\"Global Variable\",function(){\r",
+									"console.log(pm.globals.get(\"g_age\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Set the global variable value\", function(){\r",
+									"var response = pm.response.json();\r",
+									"var token = response.token;\r",
+									"console.log(pm.environment.set(\"e_token\",token));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/auth",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking Request #3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set my Environment variable\",function(){\r",
+									"    var response = pm.response.json();\r",
+									"    var bookingid = response.bookingid;\r",
+									"    var checkin = response.booking.bookingdates.checkin;\r",
+									"\r",
+									"    pm.environment.set(\"e_bookingid\",bookingid);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"bookingid\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking Request by ID#4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"firstname\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/booking/{{e_bookingid}}",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{e_bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Booking Request #5",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Booking Request #6",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"totalprice\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "{{e_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Priya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-04-07\",\r\n        \"checkout\" : \"2025-04-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking/{{e_bookingid}}",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{e_bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Partial Update Booking Request #7",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "{{g_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"{{default_FN}}\",\r\n    \"lastname\" : \"Dey\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking/{{e_bookingid}}",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{e_bookingid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request #8",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Status code name has string\", function () {\r",
+									"    pm.response.to.have.status(\"Created\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "dfddf44d6e466bd",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{url}}/booking/{{e_bookingid}}",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"{{e_bookingid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative Scenarios",
+			"item": [
+				{
+					"name": "Create Booking Request with invalid Payload",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create booking with Invalid payload and get 500 error\",function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "token: 27b54c31769ea33",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Booking Request with wrong URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create booking with Wrong URL\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/bookin",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"bookin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify that create Booking Request without a key is working",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create booking without a Key\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify that create Booking Request without a Total Price Key is working or not",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create booking without a Total Price\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify that create Booking Request without Check in Booking Dates is working or not",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Create booking without a Key\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \r\n        \"checkout\" : \"2025-03-09\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Integration",
+			"item": [
+				{
+					"name": "Integration - Create a Booking, Update Booking, Get booking ID",
+					"item": [
+						{
+							"name": "Ping Request #1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(\"Hello World\");\r",
+											"var o_name=\"Alex\";\r",
+											"var g_name=pm.globals.get(\"global_name\");\r",
+											"\r",
+											"pm.test(\"TC#1 Verify the Status code is 201\", function () {\r",
+											"    console.log(pm.info.requestName);\r",
+											"    console.log(o_name);\r",
+											"    console.log(g_name);\r",
+											"});\r",
+											"pm.test(\"TC#2 Verify the Status code is 201\", function () {\r",
+											"   var f_name=\"Greg\"\r",
+											"   console.log(o_name);\r",
+											"   console.log(f_name);\r",
+											"   console.log(g_name);\r",
+											"   console.log(pm.collectionVariables.get(\"c_name\"));\r",
+											"});\r",
+											"\r",
+											"pm.globals.unset(\"variable_key\");\r",
+											"pm.globals.set(\"g_age\", \"30\");\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/ping",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Token Request #2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC#1 Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"TC#2 Content-Type is present\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"pm.test(\"TC#3 Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+											"});\r",
+											"pm.test(\"Token should exist\",function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"pm.expect(token).to.exist;\r",
+											"});\r",
+											"pm.test(\"Global Variable\",function(){\r",
+											"console.log(pm.globals.get(\"g_age\"));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Set the global variable value\", function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"console.log(pm.environment.set(\"e_token\",token));\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/auth",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Booking Request #3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set my Environment variable\",function(){\r",
+											"    var response = pm.response.json();\r",
+											"    var bookingid = response.bookingid;\r",
+											"    var checkin = response.booking.bookingdates.checkin;\r",
+											"\r",
+											"    pm.environment.set(\"e_bookingid\",bookingid);\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"bookingid\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/booking",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Booking Request #4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"totalprice\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password123",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Cookie",
+										"value": "{{e_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"Priya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-04-07\",\r\n        \"checkout\" : \"2025-04-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Booking Request by ID#5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"firstname\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integration- Create a booking, Delete the booking with ID, try to Retrieve the deleted ID with get request",
+					"item": [
+						{
+							"name": "Ping Request #1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(\"Hello World\");\r",
+											"var o_name=\"Alex\";\r",
+											"var g_name=pm.globals.get(\"global_name\");\r",
+											"\r",
+											"pm.test(\"TC#1 Verify the Status code is 201\", function () {\r",
+											"    console.log(pm.info.requestName);\r",
+											"    console.log(o_name);\r",
+											"    console.log(g_name);\r",
+											"});\r",
+											"pm.test(\"TC#2 Verify the Status code is 201\", function () {\r",
+											"   var f_name=\"Greg\"\r",
+											"   console.log(o_name);\r",
+											"   console.log(f_name);\r",
+											"   console.log(g_name);\r",
+											"   console.log(pm.collectionVariables.get(\"c_name\"));\r",
+											"});\r",
+											"\r",
+											"pm.globals.unset(\"variable_key\");\r",
+											"pm.globals.set(\"g_age\", \"30\");\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/ping",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Token Request #2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC#1 Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"TC#2 Content-Type is present\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"pm.test(\"TC#3 Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+											"});\r",
+											"pm.test(\"Token should exist\",function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"pm.expect(token).to.exist;\r",
+											"});\r",
+											"pm.test(\"Global Variable\",function(){\r",
+											"console.log(pm.globals.get(\"g_age\"));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Set the global variable value\", function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"console.log(pm.environment.set(\"e_token\",token));\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/auth",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Booking Request #3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set my Environment variable\",function(){\r",
+											"    var response = pm.response.json();\r",
+											"    var bookingid = response.bookingid;\r",
+											"    var checkin = response.booking.bookingdates.checkin;\r",
+											"\r",
+											"    pm.environment.set(\"e_bookingid\",bookingid);\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"bookingid\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/booking",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Request #4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"pm.test(\"Status code name has string\", function () {\r",
+											"    pm.response.to.have.status(\"Created\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password123",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Cookie",
+										"value": "dfddf44d6e466bd",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Booking Request by ID#5",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"firstname\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integration- Get existing booking with Get All booking IDs request and the Update the booking",
+					"item": [
+						{
+							"name": "Ping Request #1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(\"Hello World\");\r",
+											"var o_name=\"Alex\";\r",
+											"var g_name=pm.globals.get(\"global_name\");\r",
+											"\r",
+											"pm.test(\"TC#1 Verify the Status code is 201\", function () {\r",
+											"    console.log(pm.info.requestName);\r",
+											"    console.log(o_name);\r",
+											"    console.log(g_name);\r",
+											"});\r",
+											"pm.test(\"TC#2 Verify the Status code is 201\", function () {\r",
+											"   var f_name=\"Greg\"\r",
+											"   console.log(o_name);\r",
+											"   console.log(f_name);\r",
+											"   console.log(g_name);\r",
+											"   console.log(pm.collectionVariables.get(\"c_name\"));\r",
+											"});\r",
+											"\r",
+											"pm.globals.unset(\"variable_key\");\r",
+											"pm.globals.set(\"g_age\", \"30\");\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/ping",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Token Request #2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC#1 Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"TC#2 Content-Type is present\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"pm.test(\"TC#3 Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+											"});\r",
+											"pm.test(\"Token should exist\",function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"pm.expect(token).to.exist;\r",
+											"});\r",
+											"pm.test(\"Global Variable\",function(){\r",
+											"console.log(pm.globals.get(\"g_age\"));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Set the global variable value\", function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"console.log(pm.environment.set(\"e_token\",token));\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/auth",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Booking Request #3",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/booking",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Booking Request #4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"totalprice\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password123",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Cookie",
+										"value": "{{e_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"Priya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-04-07\",\r\n        \"checkout\" : \"2025-04-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Integration- Create a booking and the delete it",
+					"item": [
+						{
+							"name": "Ping Request #1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"console.log(\"Hello World\");\r",
+											"var o_name=\"Alex\";\r",
+											"var g_name=pm.globals.get(\"global_name\");\r",
+											"\r",
+											"pm.test(\"TC#1 Verify the Status code is 201\", function () {\r",
+											"    console.log(pm.info.requestName);\r",
+											"    console.log(o_name);\r",
+											"    console.log(g_name);\r",
+											"});\r",
+											"pm.test(\"TC#2 Verify the Status code is 201\", function () {\r",
+											"   var f_name=\"Greg\"\r",
+											"   console.log(o_name);\r",
+											"   console.log(f_name);\r",
+											"   console.log(g_name);\r",
+											"   console.log(pm.collectionVariables.get(\"c_name\"));\r",
+											"});\r",
+											"\r",
+											"pm.globals.unset(\"variable_key\");\r",
+											"pm.globals.set(\"g_age\", \"30\");\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://{{url}}/ping",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"ping"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Token Request #2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"TC#1 Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"TC#2 Content-Type is present\", function () {\r",
+											"    pm.response.to.have.header(\"Content-Type\");\r",
+											"});\r",
+											"pm.test(\"TC#3 Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+											"});\r",
+											"pm.test(\"Token should exist\",function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"pm.expect(token).to.exist;\r",
+											"});\r",
+											"pm.test(\"Global Variable\",function(){\r",
+											"console.log(pm.globals.get(\"g_age\"));\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Set the global variable value\", function(){\r",
+											"var response = pm.response.json();\r",
+											"var token = response.token;\r",
+											"console.log(pm.environment.set(\"e_token\",token));\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/auth",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Booking Request #3",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set my Environment variable\",function(){\r",
+											"    var response = pm.response.json();\r",
+											"    var bookingid = response.bookingid;\r",
+											"    var checkin = response.booking.bookingdates.checkin;\r",
+											"\r",
+											"    pm.environment.set(\"e_bookingid\",bookingid);\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Body matches string\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(\"bookingid\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://{{url}}/booking",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Request #4",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"pm.test(\"Status code name has string\", function () {\r",
+											"    pm.response.to.have.status(\"Created\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "password123",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "admin",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Cookie",
+										"value": "dfddf44d6e466bd",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{url}}/booking/{{e_bookingid}}",
+									"protocol": "https",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"booking",
+										"{{e_bookingid}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Smoke Test scenarios",
+			"item": [
+				{
+					"name": "Create Booking Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/booking/1605",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"1605"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "dfddf44d6e466bd",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{url}}/booking/1605",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"1605"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping Request #1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var name = \"pramod\";\r",
+									"\r",
+									"pm.test(\"Verify that the status code is 201\", function(){\r",
+									"console.log(pm.info.requestName);    \r",
+									"});\r",
+									"\r",
+									"pm.test(\"TC#2 Verify that the status code is 201\", function){\r",
+									"    var name2=\"Aju\"\r",
+									"    console.log(name);\r",
+									"    console.log(name2);\r",
+									"    \r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/ping",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Token Request #2 Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"TC#1 - Status code is 200\",function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test(\"TC#2 - Content-Type is Present\",function(){\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"TC#3 - Body matches String\",function(){\r",
+									"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/auth",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sanity Test scenarios",
+			"item": [
+				{
+					"name": "Create Booking Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Riya\",\r\n    \"lastname\" : \"Dash\",\r\n    \"totalprice\" : 2500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2025-03-07\",\r\n        \"checkout\" : \"2025-03-09\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/booking",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Booking Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/booking/1605",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"1605"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Cookie",
+								"value": "dfddf44d6e466bd",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{url}}/booking/1605",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"booking",
+								"1605"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ping Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(\"Hello World\");\r",
+									"console.log(pm.info.requestName);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{url}}/ping",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Token Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{url}}/auth",
+							"protocol": "https",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.collectionVariables.set(\"c_name\", \"CollectioName\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "c_name",
+			"value": ""
+		}
+	]
+}
